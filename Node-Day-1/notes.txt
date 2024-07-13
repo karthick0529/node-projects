@@ -1,0 +1,104 @@
+Below are the steps to connect the front-end and back-end using react.js, node.js, and express.js.
+
+Follow these steps to create the project:
+
+1. Create a project folder with the name "Project_Name".
+
+2. Create two folders, "client" and "server":
+
+    - The "client" folder is for the front-end (React.js).
+    - The "server" folder is for the back-end (node.js).
+
+3. Create the client project using the following commands:
+
+    - npm create vite@latest
+    - Name the project as "client"
+    - cd client
+    - npm install
+    - npm run dev
+
+4. Go to the server folder using the specified path and follow these steps:
+
+    - npm init -y - to create a package.json file inside the server
+    - npm i express - to install the express package which will also install the required node modules and package-lock.json file
+    - Copy the .gitignore file from the client and paste it here to avoid pushing and pulling unnecessary folders on GitHub
+    - Create a server.js file and write the following code for express:
+
+        const express = require('express')
+        const app = express()
+
+        app.get('/', function (req, res) {
+        res.send('Hello World')
+        })
+
+        app.listen(3000, () => {
+            console.log("Server is running on port 3000")
+        })
+
+    - Run the code using the command "node server.js"
+
+5. After creating both front-end and back-end codes, follow these steps to connect both ends:
+
+    - Install npm install cors in the server side to configure your backend server to allow requests from your frontend's origin
+    - Use the following cors code in server.js:
+
+        const cors = require("cors")
+        app.use(cors());
+
+    - Install the axios package in the client side using npm install axios
+    - Use the React, useState, and useEffect hooks from React inside the App.jsx file and access the code from the server-side inside the client-side.
+
+    // Example:
+    import React, { useEffect, useState } from 'react';
+    import axios from 'axios';
+
+    function App() {
+      
+      const [greeting, setGreeting] = useState('');
+
+      useEffect(() => {
+        axios.get('http://localhost:3000/api/greeting')
+        .then(res => {
+          setGreeting(res.data.message)
+        })
+        .catch(err => {
+          console.error(err)
+        })
+      }, [])
+
+      return (
+        <>
+          <div>
+            <header>
+              <h1>{greeting}</h1>
+              <button onClick={() => {
+                axios.get('http://localhost:3000/api/content')
+                .then(res => {
+                  setGreeting(res.data.message)
+                })
+                .catch(err => {
+                  console.error(err)
+                })
+              }}>content</button>
+               <button onClick={() => {
+                axios.get('http://localhost:3000')
+                .then(res => {
+                  setGreeting(res.data)
+                })
+                .catch(err => {
+                  console.error(err)
+                })
+              }}>Welcome</button>
+            </header>
+          </div>
+        </>
+      )
+    }
+
+    export default App
+
+Note:
+
+- For '/api/....' inside axios fetch, it should be res.data.message
+- For other requests, it should be res.data
+- Make sure that the axios fetch links are up and running when executing on the client side.
