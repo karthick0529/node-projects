@@ -22,3 +22,5 @@
     .catch((err) => {
         console.error("Error connecting MongoB", err);
     });
+
+7. node server.js 
