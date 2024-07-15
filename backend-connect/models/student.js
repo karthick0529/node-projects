@@ -6,13 +6,15 @@ const studentSchema = new mongoose.Schema({
         required: true,
     },
     mentor:{
-        type: String,
-        required: false,
+        type: mongoose.Schema.Types.ObjectId, // References to ObjectId of the Mentor collection
+        ref: "Mentor", // the model to reference
     },
-    previous_mentor:{
-        type: Array,
-        required: false,
-    }
+    previousMentor:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref: "Mentor",
+        },
+    ],
 });
 
 const Student = mongoose.model("Student", studentSchema);
