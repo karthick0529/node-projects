@@ -6,7 +6,7 @@ const app = express();
 app.use(bodyParser.json());
 
 mongoose
-  .connect("mongodb://localhost:27017/Guvi")
+  .connect("mongodb://localhost:27017/basic-connector")
   .then(() => {
     console.log("Connected to MongoDB");
   })
