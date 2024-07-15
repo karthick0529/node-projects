@@ -11,7 +11,7 @@ RENDER URL --> https://node-projects-ges1.onrender.com
 END POINTS :
 
 GET METHOD - /get-files --> To collect all existing files from public folder. 
+
 POST METHOD - /create-files --> To create new file at public folder.
 
 
-![alt text](Creating-file.png) ![alt text](Retrieving-file-data.png)
