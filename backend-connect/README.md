@@ -77,3 +77,19 @@ Example:
 Example code:
 
     please check person code inside the models folder
+
+15. .env file is used to hide the sensitive information like MongoDB URI and PORT number
+
+Note: npm install dotenv for installing .env files
+
+    1. we need to create afile with .env 
+    2. enter the sensitive details like MONGO_URI and PORT in this file and save it
+    3. go to server.js and add the .env file using 
+        const dotenv = require("dotenv")
+    4. dotenv.config()
+    5. create a variable for .env 
+        const env = process.env.NODE_ENV || development // this will check where the file is to directed whether .env/production/development
+
+        run using node server.js
+
+    6. If nothing is specified it is given as default we should run it as NODE_env = .env/dev/prod node server.js            
