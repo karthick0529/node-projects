@@ -59,3 +59,21 @@ Example:
     // exporting the schema and model created
 
     module.exports = Student;
+
+
+10. Create a folder routes inside the main folder and create a index.js file
+11. Type the API codes which are nessary to do CRUD operations here 
+
+    -> it will create a collection inside the MongoDB server where we can do our operations.
+    -> also export the router
+
+12. Enter the code for using the routes folder inside server.js and declare the necessary path for routes
+    
+    app.use("/api", routes);
+
+13. run the program using node server.js
+14. Enter the necessary data using POSTMAN tool under body -> raw -> json. The data will be entered inside the database.
+
+Example code:
+
+    please check person code inside the models folder
