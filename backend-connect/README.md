@@ -93,3 +93,58 @@ Note: npm install dotenv for installing .env files
         run using node server.js
 
     6. If nothing is specified it is given as default we should run it as NODE_env = .env/dev/prod node server.js            
+
+    SAmple code for running 5 = >
+
+        Here's how to do it step-by-step:
+
+            Install the cross-env package (if you haven't already):
+
+            powershell
+            Copy code
+            npm install cross-env
+            Modify your code to load the appropriate .env file based on the NODE_ENV environment variable:
+
+            javascript
+            Copy code
+            const express = require("express");
+            const mongoose = require("mongoose");
+            const bodyParser = require("body-parser");
+            const routes = require("./routes/index");
+            const dotenv = require("dotenv");
+
+            // Load environment variables from .env files
+            const env = process.env.NODE_ENV || 'development';
+            dotenv.config({ path: `.env.${env}` });
+
+            const app = express();
+            app.use(bodyParser.json());
+
+            // Connection to MongoDB
+            mongoose
+            .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+            .then(() => {
+                console.log("Connected to MongoDB");
+            })
+            .catch((err) => {
+                console.error("Error connecting to MongoDB", err);
+            });
+
+            // Testing console
+            console.log("process.env.MONGO_URI", process.env.MONGO_URI);
+
+            app.use("/api", routes);
+
+            const port = process.env.PORT || 3000;
+            // Testing console
+            console.log("process.env.PORT", process.env.PORT);
+
+            app.listen(port, () => {
+            console.log(`Server is running on the port ${port}`);
+            });
+            Run your script using cross-env to set the NODE_ENV variable:
+
+            powershell
+            Copy code
+            npx cross-env NODE_ENV=production node server.js
+            Using cross-env ensures that the environment variable is set correctly, regardless of the operating system. This should resolve the issue you're encountering with the NODE_ENV variable not being recognized.
