@@ -41,6 +41,8 @@ router.get("/mentor", async (req,res) => {
 router.get("/student", async (req,res) => {
     try{
         const students = await Student.find()
+        .populate("mentor")
+        .populate("previousMentor");
         res.send(students);
     }
     catch(error){
