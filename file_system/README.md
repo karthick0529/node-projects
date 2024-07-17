@@ -6,7 +6,7 @@ Content of the file should be current timestamp Filename should be current date-
 
 Write API Endpoint to retrive all the files in particular folder.
 
-RENDER URL --> https://node-projects-ges1.onrender.com
+RENDER URL --> https://node-projects-file-system.onrender.com
 
 END POINTS :
 
