@@ -38,7 +38,7 @@ Sample Request
 json
 
 {
-"customerName": "John Doe",
+"customerName": "John",
 "date": "2023-07-17",
 "startTime": "10:00",
 "endTime": "12:00",
