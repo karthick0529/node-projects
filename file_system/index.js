@@ -25,7 +25,7 @@ app.post("/create-files", (req, res) => {
   const filePath = path.join(folderPath, fileName);
 
   // fs.writeFile method to write the timestamp.toString() value to a file specified by filePath.
-  fs.writeFile(filePath, timestamp.toString(), (err) => {
+  fs.writeFile(filePath, timestamp.toISOString(), (err) => {
     if (err) {
       console.log("Error creating the file", err);
       return res.status(500).json({ message: `Error writing file - ${err}` });
