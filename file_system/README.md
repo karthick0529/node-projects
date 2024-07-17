@@ -14,4 +14,3 @@ GET METHOD - /get-files --> To collect all existing files from public folder.
 
 POST METHOD - /create-files --> To create new file at public folder. 
 
-
