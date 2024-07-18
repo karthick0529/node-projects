@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const routes = require("./routes/index");
 const dotenv = require("dotenv");
+const cors = require("cors");
 
 // Load environment variables from .env files
 dotenv.config();
@@ -12,6 +13,7 @@ dotenv.config();
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors());
 
 // Connection to MongoDB
 mongoose
