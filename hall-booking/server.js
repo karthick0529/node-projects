@@ -1,113 +1,217 @@
-import express from 'express';
-const app = express();
+const express = require("express")
+const app = express()
 const port = 4000;
 
-app.use(express.json());
+const rooms = [
+    {
+        room_name:"Room #1",
+        seates_available:"50",
+        aminities:"AC,WIFI,TV,WHITEBOARD",
+        price:"200$",
+    },
+    {
+        room_name:"Room #2",
+        seates_available:"50",
+        aminities:"WIFI,TV",
+        price:"150$",
+    },
+    {
+        room_name:"Room #3",
+        seates_available:"50",
+        aminities:"WIFI",
+        price:"100$",
+    }
+]
 
-const rooms = [];
-const bookings = [];
+const booked_rooms = [];
+const booked_customer = [];
+const total_booking_data =[];
 
-// Create a Room
-app.post('/rooms', (req, res) => {
-    const { roomName, numberOfSeats, amenities, pricePerHour } = req.body;
+app.get("/get-rooms",(req,res)=>{
+    res.json(rooms)
+})
 
-    const room = {
-        roomId: rooms.length + 1,
-        roomName,
-        numberOfSeats,
-        amenities,
-        pricePerHour,
-        bookings: []
-    };
+app.post("/add-room",(req,res)=>{
+    const room_name = req.query.room_name;
+    const seates_available = req.query.seates_available;
+    const aminities = req.query.aminities;
+    const price = req.query.price
+    let check = 0;
 
-    rooms.push(room);
-    res.status(201).json(room);
-});
-
-// Book a Room
-app.post('/bookings', (req, res) => {
-    const { customerName, date, startTime, endTime, roomId } = req.body;
-
-    const room = rooms.find(r => r.roomId === roomId);
-
-    if (!room) {
-        return res.status(404).json({ message: 'Room not found' });
+    //Check for empty values
+    if(!room_name || !seates_available || !aminities || !price){
+        return res.json({message:"Fields should not empty"})
     }
 
-    const conflictingBooking = room.bookings.find(
-        booking => booking.date === date &&
-        ((booking.startTime <= startTime && booking.endTime > startTime) ||
-        (booking.startTime < endTime && booking.endTime >= endTime))
-    );
+    //Check for existance of the room_name in rooms
+    rooms.map((room)=>{
+        if(room.room_name == room_name){
+            check++
+            return res.json({message:`Same room name detected please change room_name - ${room_name}`})
+        }
+    })
 
-    if (conflictingBooking) {
-        return res.status(400).json({ message: 'Room already booked for the specified time' });
+    //Will add the new room deatails if its not already exisited
+    if(check==0){
+        const new_room = {
+            room_name,
+            seates_available,
+            aminities,
+            price : `${price}$`,
+        }
+    
+        rooms.push(new_room);
+        res.json({message:"Added new room successfully",new_room})
+    }
+})
+
+app.get("/all-booked-rooms",(req,res)=>{
+    res.json(booked_rooms)
+})
+
+app.post("/book-room", (req,res)=> {
+    const room_name = req.query.room_name;
+    const customer_name = req.query.customer_name;
+    const date = req.query.date;
+    const start_time = req.query.start_time;
+    const end_time = req.query.end_time;
+
+    //Check for values is not null
+    if(!room_name){
+        return res.json({message:"Room Name needed"})
     }
 
-    const booking = {
-        bookingId: bookings.length + 1,
-        customerName,
-        date,
-        startTime,
-        endTime,
-        roomId
-    };
+    if(!customer_name || !date || !start_time || !end_time){
+        return res.json({message:"Fields should not be empty",customer_name,date,start_time,end_time})
+    }
 
-    room.bookings.push(booking);
-    bookings.push(booking);
+    //Filter the booked room data checking for its availability 
+    const check_status = booked_rooms.filter((room)=>room.room_name == room_name && room.date == date)
 
-    res.status(201).json(booking);
-});
+    rooms.map((room)=>{
+        if(room.room_name == room_name){
 
-// List All Rooms with Booked Data
-app.get('/rooms', (req, res) => {
-    const roomsWithBookings = rooms.map(room => ({
-        roomName: room.roomName,
-        numberOfSeats: room.numberOfSeats,
-        amenities: room.amenities,
-        pricePerHour: room.pricePerHour,
-        bookings: room.bookings.map(booking => ({
-            customerName: booking.customerName,
-            date: booking.date,
-            startTime: booking.startTime,
-            endTime: booking.endTime
-        }))
-    }));
+            //If no booked rooms in that room_name and date we proceed to book that room for customer_name
+            if(booked_rooms.length == 0 || check_status.length == 0){
 
-    res.status(200).json(roomsWithBookings);
-});
+                const booked_room_data = {
+                    room_name,
+                    customer_name,
+                    date,
+                    start_time,
+                    end_time,
+                    booked_satus:"booked"
+                }
+                booked_rooms.push(booked_room_data);
 
-// List All Customers with Booked Data
-app.get('/customers', (req, res) => {
-    const customersWithBookings = bookings.map(booking => ({
-        customerName: booking.customerName,
-        roomName: rooms.find(room => room.roomId === booking.roomId).roomName,
-        date: booking.date,
-        startTime: booking.startTime,
-        endTime: booking.endTime
-    }));
+                const total_customer_data = {
+                    customer_name,
+                    room_name,
+                    date,
+                    start_time,
+                    end_time,
+                    booking_id : total_booking_data.length +1,
+                    booking_data : new Date(),
+                    booking_status : "booked"
+                }
+                total_booking_data.push(total_customer_data)
 
-    res.status(200).json(customersWithBookings);
-});
+                const booked_customer_data = {
+                    customer_name,
+                    room_name,
+                    date,
+                    start_time,
+                    end_time
+                }
+                booked_customer.push(booked_customer_data);
+            }
 
-// List Bookings for a Specific Customer
-app.get('/customers/:customerName/bookings', (req, res) => {
-    const customerName = req.params.customerName;
+            //If we got same room_name and date already booked then we proceed to check for its time availability
+            else {
+                let temp_count = 0;
+                const user_start_time = `${date} ${start_time}`;
+                const user_end_time = `${date} ${end_time}`;
 
-    const customerBookings = bookings.filter(booking => booking.customerName === customerName)
-        .map(booking => ({
-            roomName: rooms.find(room => room.roomId === booking.roomId).roomName,
-            date: booking.date,
-            startTime: booking.startTime,
-            endTime: booking.endTime,
-            bookingId: booking.bookingId,
-            bookingDate: booking.date,
-            bookingStatus: 'confirmed'
-        }));
+                const booked_start_time_parse = Date.parse(user_start_time);
+                const booked_end_time_parse = Date.parse(user_end_time);
 
-    res.status(200).json(customerBookings);
-});
+                check_status.map((room)=>{
+                    const date_check = room.date
+                    const check_start_time = `${date_check} ${room.start_time}`;
+                    const check_end_time = `${date_check} ${room.end_time}`;
 
-app.listen(port, () => {
-    console.log(`Server running on PORT => ${port}`);
-});
+                    const room_start_time_parse = Date.parse(check_start_time);
+                    const room_end_time_parse = Date.parse(check_end_time);
+
+                    //Condition to check the users timing - start_time and end_time not same as already booked timings
+                    if(booked_start_time_parse > room_end_time_parse || booked_end_time_parse < room_start_time_parse){
+                        temp_count++
+                    }
+                })
+
+                if(temp_count == check_status.length){
+                    const booked_room_data = {
+                        room_name,
+                        customer_name,
+                        date,
+                        start_time,
+                        end_time,
+                        booked_satus:"booked"
+                    }
+                    booked_rooms.push(booked_room_data);
+    
+                    const total_customer_data = {
+                        customer_name,
+                        room_name,
+                        date,
+                        start_time,
+                        end_time,
+                        booking_id : total_booking_data.length +1,
+                        booking_data : new Date(),
+                        booking_status : "booked"
+                    }
+                    total_booking_data.push(total_customer_data)
+
+                    const booked_customer_data = {
+                        customer_name,
+                        room_name,
+                        date,
+                        start_time,
+                        end_time
+                    }
+                    booked_customer.push(booked_customer_data);
+                }
+                else {
+                    return res.json({message:`Room not available for the given timing ${start_time} and ${end_time}`})
+                }
+            }
+            return res.json({message:`Room available in this name - ${room_name} and booked successfully`})
+        } 
+    })
+    res.json({message:`Room not available in this name - ${room_name}`})
+})
+
+app.get("/all-customers",(req,res)=> {
+    res.json(booked_customer)
+})
+
+app.get("/booking-customer-data",(req,res)=> {
+    const customer_name = req.query.customer_name;
+
+    //Check for customer_name is not null
+    if(!customer_name){
+       return res.json({message:"Need specific customer name to display there booking details"})
+    }
+
+    //Filter the totalbooking data by customer_name
+    const booking_customer_data = total_booking_data.filter((ele)=>ele.customer_name == customer_name)
+
+    if(booking_customer_data.length==0){
+        return res.json({message:`No customer found in name - ${customer_name}`})
+    }
+    res.json({total_bookings :booking_customer_data.length,booking_customer_data})
+})
+
+app.listen(port,()=>{
+    console.log(`Node JS Running in localhost:${port}`)
+})
