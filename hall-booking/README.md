@@ -24,9 +24,11 @@ END POINTS / DOCUMENTATION
 GET METHOD :
 
 /get-rooms --> To collect all rooms details
+
 /all-booked-rooms --> To collect the all booked rooms details
 
 /all-customers --> To collect all customers details
+
 /booking-customer-data --> To get particular customer data (required customer_name from Query Params)
 
 POST METHOD :
