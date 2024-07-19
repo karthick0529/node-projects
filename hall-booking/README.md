@@ -1,8 +1,17 @@
-Hall Booking 
+HALL BOOKING
 
 This project is a hall booking system API built using Node.js and Express. It allows you to create rooms, book rooms, and retrieve booking information.
 
-Features
+RENDER URL : https://node-projects-1-iu1m.onrender.com
+
+TASK DETAILS
+
+Create an Express Server
+Create end-points and write logics
+Can use local variable to store data
+Write API documentation in POSTMAN Docs
+
+TASK REQUIREMENTS
 
 - Create a room with the number of seats, amenities, and price per hour.
 - Book a room for a specific date and time period.
@@ -10,55 +19,20 @@ Features
 - List all customers with their booking data.
 - List all bookings for a specific customer.
 
-Endpoints
+END POINTS / DOCUMENTATION
 
-1. Create a Room
+GET METHOD :
 
-Endpoint: '/rooms'  
-Method: 'POST'  
-Description: Creates a new room with the specified details.
+/get-rooms --> To collect all rooms details
+/all-booked-rooms --> To collect the all booked rooms details
+/all-customers --> To collect all customers details
+/booking-customer-data --> To get particular customer data (required customer_name from Query Params)
+POST METHOD :
 
-Sample Request
-json
+/add-room --> To add more rooms.
+Data required in Query Params - room_name, seates_available, aminities, price. (all data required from user)
+Conditions :
+Should not add same room name again.
 
-{
-"roomName": "Conference Room",
-"numberOfSeats": 50,
-"amenities": ["Wi-Fi", "Projector", "Whiteboard"],
-"pricePerHour": 100
-}
-
-2. Book a Room
-
-Endpoint: '/bookings'
-Method: 'POST'
-Description: Books a room for a specific time period.
-
-Sample Request
-json
-
-{
-"customerName": "John",
-"date": "2023-07-17",
-"startTime": "10:00",
-"endTime": "12:00",
-"roomId": 1
-}
-
-3. List All Rooms with Booked Data
-
-Endpoint: '/rooms'
-Method: 'GET'
-Description: Retrieves all rooms along with their booking data.
-
-4. List All Customers with Booked Data
-
-Endpoint: '/customers'
-Method: 'GET'
-Description: Retrieves all customers along with their booking data.
-
-5. List Bookings for a Specific Customer
-
-Endpoint: '/customers/:customerName/bookings'
-Method: 'GET'
-Description: Retrieves all bookings for a specific customer.
+/book-room --> To book room. [CONDITIONS : Should not book the already booked room for that time period]
+Data required in Query Params - room_name, customer_name, date, start_time, end_time. (all data required from user)
