@@ -10,9 +10,19 @@ const generateToken = (user) => {
 }
 
 exports.registerUser = async (req, res) => {
-    const { name, password,role } = req.body;
-    const user = new User({name, password,role });
+    const { name, password, role } = req.body;
+    const user = new User({name, password, role });
     await user.save();
+
+    // Send Resitration Email
+    const message = `<h1>Welcome to My Task Manager!</h1> <p>Your registration is successful: ${user.name}</p>`;
+    await sendEmail({
+        email : user.name,
+        subject : "Registration Successful",
+        message,
+        html : message
+    });
+        
     res.json({
         _id: user._id,
         name: user.name,
