@@ -15,4 +15,4 @@ router.get('/checkResetPass/:passResetToken',verifyResetPassToken);
 
 router.put('/updatePass/:passResetToken', createNewPass);
 
-module.exports = router;
+module.exports = router;  
