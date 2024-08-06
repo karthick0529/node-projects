@@ -1,10 +1,18 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+import { CssBaseline } from '@mui/material';
+import { AuthProvider } from './contexts/AuthContext';
+import { URLProvider } from './contexts/URLContext';
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <CssBaseline />
+    <AuthProvider>
+      <URLProvider>
+        <App />
+      </URLProvider>
+    </AuthProvider>
   </React.StrictMode>,
-)
+  document.getElementById('root')
+);
