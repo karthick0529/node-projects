@@ -42,7 +42,6 @@ exports.sendRegisterMail = async (req, res) => {
   <a style="text-decoration:none; border:1px solid black; background-color:black;color:white;padding:4px;border-radius:5px" type="button" href="${process.env.NETLIFY_REGISTOR}${registerToken}" target="_blank">Verify Now!</a>
   </div>
   </div>`;
-
   sendEmail({
     email: new_user.email,
     subject: "Email account verification",
