@@ -1,6 +1,65 @@
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Room:
+ *       type: object
+ *       properties:
+ *         room_name:
+ *           type: string
+ *         seates_available:
+ *           type: string
+ *         aminities:
+ *           type: string
+ *         price:
+ *           type: string
+ *     CustomerBooking:
+ *       type: object
+ *       properties:
+ *         customer_name:
+ *           type: string
+ *         room_name:
+ *           type: string
+ *         date:
+ *           type: string
+ *         start_time:
+ *           type: string
+ *         end_time:
+ *           type: string
+ */
+
+
+
 const express = require("express")
 const app = express()
 const port = 4000;
+
+// Swagger UI Code
+
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
+const swaggerOptions = {
+  swaggerDefinition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Room Booking API',
+      version: '1.0.0',
+      description: 'API for room management and bookings'
+    },
+    servers: [
+      {
+        url: 'http://localhost:4000'
+      }
+    ]
+  },
+  apis: ['./server.js'], // Replace with your file name
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+// End of Swagger UI Code
 
 const rooms = [
     {
@@ -27,9 +86,59 @@ const booked_rooms = [];
 const booked_customer = [];
 const total_booking_data =[];
 
+/**
+ * @swagger
+ * /get-rooms:
+ *   get:
+ *     summary: Get all rooms
+ *     responses:
+ *       200:
+ *         description: List of all rooms
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Room'
+ */
+
+
+
 app.get("/get-rooms",(req,res)=>{
     res.json(rooms)
 })
+
+/**
+ * @swagger
+ * /add-room:
+ *   post:
+ *     summary: Add a new room
+ *     parameters:
+ *       - in: query
+ *         name: room_name
+ *         schema:
+ *           type: string
+ *         required: true
+ *       - in: query
+ *         name: seates_available
+ *         schema:
+ *           type: string
+ *         required: true
+ *       - in: query
+ *         name: aminities
+ *         schema:
+ *           type: string
+ *         required: true
+ *       - in: query
+ *         name: price
+ *         schema:
+ *           type: string
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Room added successfully
+ */
+
 
 app.post("/add-room",(req,res)=>{
     const room_name = req.query.room_name;
@@ -65,9 +174,58 @@ app.post("/add-room",(req,res)=>{
     }
 })
 
+/**
+ * @swagger
+ * /all-booked-rooms:
+ *   get:
+ *     summary: Get all booked rooms
+ *     responses:
+ *       200:
+ *         description: List of booked rooms
+ */
+
+
 app.get("/all-booked-rooms",(req,res)=>{
     res.json(booked_rooms)
 })
+
+
+/**
+ * @swagger
+ * /book-room:
+ *   post:
+ *     summary: Book a room
+ *     parameters:
+ *       - in: query
+ *         name: room_name
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: customer_name
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: date
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: start_time
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: end_time
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Room booked or error message if timing unavailable
+ */
+
 
 app.post("/book-room", (req,res)=> {
     const room_name = req.query.room_name;
@@ -191,9 +349,39 @@ app.post("/book-room", (req,res)=> {
     res.json({message:`Room not available in this name - ${room_name}`})
 })
 
+
+/**
+ * @swagger
+ * /all-customers:
+ *   get:
+ *     summary: Get all customers who have booked rooms
+ *     responses:
+ *       200:
+ *         description: List of customers
+ */
+
+
 app.get("/all-customers",(req,res)=> {
     res.json(booked_customer)
 })
+
+
+/**
+ * @swagger
+ * /booking-customer-data:
+ *   get:
+ *     summary: Get booking details of a specific customer
+ *     parameters:
+ *       - in: query
+ *         name: customer_name
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Customer booking details
+ */
+
 
 app.get("/booking-customer-data",(req,res)=> {
     const customer_name = req.query.customer_name;
