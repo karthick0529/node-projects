@@ -24,6 +24,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const authRouter = require('./routes/authrouter');
 const taskRouter = require('./routes/taskrouter');
+const logger = require('./utils/logger'); 
 
 dotenv.config();
 const app = express();
@@ -40,3 +41,4 @@ app.use('/api/tasks', taskRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server running on port ${port}`));
+logger.info("🚀 Server is starting...");
