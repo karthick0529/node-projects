@@ -1,3 +1,22 @@
+/**
+ * Main server setup file for Task Management API
+ * 
+ * This Express application provides two main API routes:
+ * - /api/auth: Handles user authentication (login, register, etc.)
+ * - /api/tasks: Handles task-related operations (CRUD functionality)
+ * 
+ * Tech Stack:
+ * - Express.js: Server framework
+ * - MongoDB with Mongoose: Database and ODM
+ * - dotenv: Loads environment variables from a .env file
+ * - cors: Enables CORS for cross-origin requests
+ * - body-parser: Parses incoming JSON request bodies
+ * 
+ * The server connects to MongoDB using the URI provided in MONGO_URI
+ * from the environment configuration. It listens on the port defined
+ * in the environment or defaults to port 3000.
+ */
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -8,6 +27,7 @@ const taskRouter = require('./routes/taskrouter');
 
 dotenv.config();
 const app = express();
+
 app.use(bodyParser.json());
 app.use(cors());
 
